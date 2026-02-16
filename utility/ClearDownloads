@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# This scripts is dumb... 
+# I think i should just do it by hand :)
+# But its okay if you want to run this periodically (nerdy af)
+
+echo "Cleaning /home/${USER}/Downloads ..."
+rm -rvf ~/Downloads/*
+echo "Cleaning done."
+

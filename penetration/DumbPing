@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# I don't know if it has any value. ICMP is usually blocked.
+# Therefore ARP scanning is 100x better than this 
+# (assuming you're scanning LAN, you wouldn't try to scan external servers wouldn't you?)
+# but WHO CARES.
+
+read -p "Input first 3 octets: " NETWORK
+
+echo "Scanning $NETWORK.*"
+
+
+for i in {0..255} 
+do
+  (
+    IP="$NETWORK.$i"
+    ping -c 1 -W 1 "$IP" > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      NAME=$(getent hosts "$IP" | awk '{print $2}')
+      printf "[HOST REACHABLE] %-15s (%s)\n" "$IP" "$NAME"
+      echo "OH THERE YOU ARE :)))))" >> /tmp/ping_script_hits
+    fi
+  ) &
+done
+
+wait
+echo "$(wc -l < /tmp/ping_script_hits)/256 hosts responded."
+rm /tmp/ping_script_hits
+echo "Scanning done."
+
